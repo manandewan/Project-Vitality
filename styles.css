@@ -46,10 +46,10 @@ body {
   font-family: var(--font-body);
   line-height: 1.6;
   overflow-x: hidden;
+  /* Note: background-attachment:fixed is omitted — causes repaint bugs on iOS Safari */
   background-image: 
     radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.05) 0%, transparent 40%),
     radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.05) 0%, transparent 40%);
-  background-attachment: fixed;
 }
 
 /* Custom Scrollbar */
@@ -93,7 +93,7 @@ h2 {
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 clamp(1rem, 5vw, 2rem);
 }
 
 .gradient-text {
@@ -126,7 +126,7 @@ h2 {
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-color);
   border-radius: 16px;
-  padding: 2.5rem;
+  padding: clamp(1.25rem, 4vw, 2.5rem);
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
 }
@@ -160,9 +160,9 @@ header.nav-header {
   left: 0;
   width: 100%;
   z-index: 100;
-  background: rgba(9, 13, 22, 0.8);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(9, 13, 22, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -170,7 +170,24 @@ header.nav-header .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 70px;
+  height: 64px;
+}
+
+/* Hamburger button — hidden on desktop */
+.nav-toggle {
+  display: none;
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-main);
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.4rem 0.65rem;
+  line-height: 1;
+  transition: background 0.2s;
+}
+.nav-toggle:hover {
+  background: rgba(255,255,255,0.06);
 }
 
 .logo {
@@ -209,10 +226,15 @@ nav.main-nav a:hover, nav.main-nav a.active {
   color: var(--text-main);
 }
 
+/* Mobile nav — open state */
+nav.main-nav.open {
+  display: flex;
+}
+
 /* Hero Section */
 .hero {
-  padding-top: 150px;
-  padding-bottom: 100px;
+  padding-top: clamp(120px, 18vw, 160px);
+  padding-bottom: clamp(60px, 10vw, 100px);
   position: relative;
   text-align: center;
 }
@@ -230,10 +252,10 @@ nav.main-nav a:hover, nav.main-nav a.active {
 }
 
 .hero-subtitle {
-  font-size: 1.25rem;
+  font-size: clamp(0.95rem, 2.5vw, 1.2rem);
   color: var(--text-muted);
   max-width: 600px;
-  margin: 1.5rem auto 2.5rem auto;
+  margin: 1.25rem auto 2rem auto;
 }
 
 .hero-cta {
@@ -257,7 +279,7 @@ nav.main-nav a:hover, nav.main-nav a.active {
 
 /* Section Common Layout */
 .section {
-  padding: 80px 0;
+  padding: clamp(50px, 8vw, 80px) 0;
   border-top: 1px solid var(--border-color);
 }
 
@@ -438,6 +460,7 @@ nav.main-nav a:hover, nav.main-nav a.active {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 0.5rem;
   margin-bottom: 0.5rem;
 }
 
@@ -477,7 +500,9 @@ nav.main-nav a:hover, nav.main-nav a.active {
 .idea-detail-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.75rem;
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 1rem;
   margin-bottom: 1.5rem;
@@ -629,45 +654,90 @@ footer p {
   text-transform: uppercase;
 }
 
-/* Media Queries for Mobile Responsiveness */
+/* ─── Responsive Breakpoints ─── */
+
 @media (max-width: 1024px) {
   .initiatives-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .pillars-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 768px) {
-  h1 {
-    font-size: 2.25rem;
+  h1 { font-size: clamp(1.75rem, 6vw, 2.4rem); }
+  h2 { font-size: clamp(1.4rem, 5vw, 1.85rem); }
+
+  .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .pillars-grid { grid-template-columns: 1fr; }
+  .initiatives-grid { grid-template-columns: 1fr; }
+  .idea-detail-grid { grid-template-columns: 1fr; }
+  .downloads-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Hamburger nav */
+  .nav-toggle { display: block; }
+
+  nav.main-nav {
+    display: none;
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    background: rgba(9, 13, 22, 0.97);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.5rem 0;
   }
-  h2 {
-    font-size: 1.75rem;
+  nav.main-nav a {
+    padding: 0.9rem clamp(1rem, 5vw, 2rem);
+    font-size: 1rem;
+    border-bottom: 1px solid var(--border-color);
   }
-  .about-grid {
-    grid-template-columns: 1fr;
+  nav.main-nav a:last-child { border-bottom: none; }
+
+  /* Tab buttons scroll horizontally */
+  .matrix-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    justify-content: flex-start;
+    padding-bottom: 0.5rem;
+    gap: 0.6rem;
   }
-  .pillars-grid {
-    grid-template-columns: 1fr;
+  .tab-btn {
+    flex-shrink: 0;
+    padding: 0.55rem 1.1rem;
+    font-size: 0.85rem;
   }
-  .initiatives-grid {
-    grid-template-columns: 1fr;
-  }
-  .idea-detail-grid {
-    grid-template-columns: 1fr;
-  }
-  .downloads-grid {
-    grid-template-columns: repeat(2, 1fr);
+
+  .idea-card { padding: 1rem; }
+  .idea-detail-container { padding: 1.25rem; }
+  .idea-detail-header h3 { font-size: 1.1rem; }
+
+  .hero-cta {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
   }
 }
 
 @media (max-width: 480px) {
-  .downloads-grid {
-    grid-template-columns: 1fr;
-  }
-  header.nav-header .container {
-    flex-direction: column;
-    height: auto;
-    padding: 1rem 0;
-    gap: 1rem;
-  }
+  .downloads-grid { grid-template-columns: 1fr; }
+
+  /* Tighten section padding more */
+  .section { padding: 40px 0; }
+
+  /* Stack logo and hamburger more compactly */
+  header.nav-header .container { height: 58px; }
+  .logo { font-size: 1.25rem; }
+
+  /* Idea card title wraps better */
+  .idea-title { font-size: 0.9rem; }
+  .idea-summary { font-size: 0.8rem; }
+
+  /* Detail panel */
+  .detail-block h4 { font-size: 0.8rem; }
+  .detail-block p { font-size: 0.88rem; }
 }

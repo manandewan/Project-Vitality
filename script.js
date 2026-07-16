@@ -231,5 +231,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initial render
   renderIdeas("all");
+
+  // Hamburger nav toggle
+  const navToggle = document.getElementById("nav-toggle");
+  const mainNav = document.getElementById("main-nav");
+  if (navToggle && mainNav) {
+    navToggle.addEventListener("click", () => {
+      const isOpen = mainNav.classList.toggle("open");
+      navToggle.textContent = isOpen ? "✕" : "☰";
+    });
+    // Close nav when a link is tapped on mobile
+    mainNav.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        mainNav.classList.remove("open");
+        navToggle.textContent = "☰";
+      });
+    });
+  }
 });
+
 
