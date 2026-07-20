@@ -169,11 +169,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const card = document.createElement("div");
       card.className = `idea-card ${verticalClass}`;
       card.innerHTML = `
-        <div class="idea-card-header">
+        <div class="idea-card-header" style="margin-bottom: 0;">
           <span class="idea-title">${idea.title}</span>
           <span class="${badgeClass}">${idea.vertical}</span>
         </div>
-        <p class="idea-summary">${idea.biomarkers.split(',')[0].trim()}</p>
       `;
       card.addEventListener("click", () => showDetails(idea));
       grid.appendChild(card);
@@ -199,10 +198,6 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
       <div class="idea-detail-grid">
         <div>
-          <div class="detail-block">
-            <h4>Target Biomarkers</h4>
-            <p>${idea.biomarkers}</p>
-          </div>
           <div class="detail-block">
             <h4>How It Works</h4>
             <p>${idea.ops}</p>
